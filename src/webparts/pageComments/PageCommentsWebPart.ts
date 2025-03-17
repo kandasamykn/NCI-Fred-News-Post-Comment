@@ -109,7 +109,7 @@ export default class PageCommentsWebPart extends BaseClientSideWebPart<IPageComm
         textareaRows: 1,
         textareaRowsOnFocus: 2,
         textareaMaxRows: 5,
-        highlightColor: '#079246', //Karuna '#b5121b', check this latest
+        highlightColor: '#079246', //Karuna '#b5121b'
         attachmentFileFormats: self.properties.attachmentFileFormats !== undefined ? self.properties.attachmentFileFormats : 'audio/*,image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx',
         attachmentFileSize: self.properties.attachmentFileSize !== undefined ? self.properties.attachmentFileSize : 5,
         siteURL: self.context.pageContext.legacyPageContext.webServerRelativeUrl,
