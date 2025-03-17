@@ -60,6 +60,6 @@ jobs:
         SPO_CLIENT_SECRET: ${{ secrets.SPO_CLIENT_SECRET }}
       run: |
         npm install -g @pnp/cli-microsoft365
-        m365 login --authType password --userName $SPO_CLIENT_ID --password $SPO_CLIENT_SECRET
+        m365 login --authType password --userName "kandasamykn@nih.gov" --password "Sugeetha@frostburg"
         m365 spo app add --filePath sharepoint/solution/advanced-comments-box.sppkg --appCatalogUrl $SPO_SITE_URL --overwrite
         m365 spo app deploy --name advanced-comments-box.sppkg --appCatalogUrl $SPO_SITE_URL --skipFeatureDeployment
