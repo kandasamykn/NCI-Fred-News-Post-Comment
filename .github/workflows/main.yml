@@ -1,4 +1,4 @@
-name: CI/CD for SPFx Solution
+name: CI/CD Pipeline
 
 on:
   push:
@@ -9,34 +9,57 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v2
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '18.x'
+        node-version: '18.18.1'
 
     - name: Install dependencies
       run: npm install
 
-    - name: Build the project
+    - name: Run tests
+      run: npm test
+
+    - name: Build project
       run: npm run build
 
-    - name: Package the solution
+    - name: Package solution
       run: gulp package-solution --ship
 
     - name: Upload SharePoint package
       uses: actions/upload-artifact@v4
       with:
-        name: spfx-solution
-        path: ./sharepoint/solution/modern-page-comments.sppkg
+        name: advanced-comments-box-sppkg
+        path: sharepoint/solution/advanced-comments-box.sppkg
 
-    - name: Deploy to SharePoint Online
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Download SharePoint package
+      uses: actions/download-artifact@v4
+      with:
+        name: advanced-comments-box-sppkg
+        path: sharepoint/solution/
+
+    - name: Debug environment variables
+      run: |
+        echo "SPO_SITE_URL: ${{ secrets.SPO_SITE_URL }}"
+        echo "SPO_CLIENT_ID: ${{ secrets.SPO_CLIENT_ID }}"
+        echo "SPO_CLIENT_SECRET: ${{ secrets.SPO_CLIENT_SECRET }}"
+
+    - name: Deploy to SharePoint
       env:
         SPO_SITE_URL: ${{ secrets.SPO_SITE_URL }}
         SPO_CLIENT_ID: ${{ secrets.SPO_CLIENT_ID }}
@@ -45,4 +68,4 @@ jobs:
         npm install -g @pnp/cli-microsoft365
         m365 login --authType password --userName $SPO_CLIENT_ID --password $SPO_CLIENT_SECRET
         m365 spo app add --filePath sharepoint/solution/advanced-comments-box.sppkg --appCatalogUrl $SPO_SITE_URL --overwrite
-        m365 spo app deploy --name advanced-comments-box.sppkg --appCatalogUrl $SPO_SITE_URL --skipFeatureDe
+        m365 spo app deploy --name advanced-comments-box.sppkg --appCatalogUrl $SPO_SITE_URL --skipFeatureDeployment
