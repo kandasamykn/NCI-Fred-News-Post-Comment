@@ -36,12 +36,6 @@ jobs:
         name: spfx-solution
         path: ./sharepoint/solution/modern-page-comments.sppkg
 
-  - name: Debug environment variables
-      run: |
-        echo "SPO_SITE_URL: ${{ secrets.SPO_SITE_URL }}"
-        echo "SPO_CLIENT_ID: ${{ secrets.SPO_CLIENT_ID }}"
-        echo "SPO_CLIENT_SECRET: ${{ secrets.SPO_CLIENT_SECRET }}"
-
     - name: Deploy to SharePoint Online
       env:
         SPO_SITE_URL: ${{ secrets.SPO_SITE_URL }}
